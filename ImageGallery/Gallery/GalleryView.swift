@@ -107,7 +107,6 @@ final class GalleryView: UIView {
     func display(images: [UIImage]) {
         let imageViews = images.map { image -> UIImageView in
             let view = UIImageView(image: image)
-            view.frame = frame
             view.contentMode = .scaleAspectFit
             return view
         }
@@ -120,7 +119,7 @@ final class GalleryView: UIView {
         paggingScrollView.contentSize = imageViews.reduce(CGSize.zero) { contentSize, imageView in
             imageView.frame = CGRect(
                 origin: CGPoint(x: contentSize.width, y: 0),
-                size: UIScreen.main.bounds.size
+                size: frame.size
             )
 
             paggingScrollView.addSubview(imageView)
