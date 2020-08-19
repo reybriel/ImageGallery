@@ -137,7 +137,14 @@ final class GalleryView: UIView {
 
 extension GalleryView: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let currentPage = Int(scrollView.contentOffset.x / frame.width)
-        imagesPageControl.currentPage = currentPage
+        imagesPageControl.currentPage = calculateCurrentPage(
+            contentOffsetX: scrollView.contentOffset.x
+        )
+    }
+
+    private func calculateCurrentPage(contentOffsetX: CGFloat) -> Int {
+        let frameHalfWidth = frame.width / 2
+        let floatingCurrentPage = (contentOffsetX + frameHalfWidth) / frame.width
+        return Int(floatingCurrentPage)
     }
 }
