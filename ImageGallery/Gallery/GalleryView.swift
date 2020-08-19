@@ -7,13 +7,14 @@ protocol GalleryViewDelegate: AnyObject {
 final class GalleryView: UIView {
     weak var delegate: GalleryViewDelegate?
 
-    private let paggingScrollView: UIScrollView = {
+    private lazy var paggingScrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.isPagingEnabled = true
         scrollView.bounces = false
+        scrollView.delegate = self
         return scrollView
     }()
 
@@ -23,12 +24,15 @@ final class GalleryView: UIView {
         button.setTitle("Exit", for: .normal)
         button.setTitleColor(.blue, for: .normal)
         button.backgroundColor = .white
-        button.titleEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
-        button.layer.cornerRadius = 5
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowRadius = 25
-        button.layer.shadowOpacity = 0.8
         return button
+    }()
+
+    private let imagesPageControl: UIPageControl = {
+        let pageControl = UIPageControl()
+        pageControl.translatesAutoresizingMaskIntoConstraints = false
+        pageControl.pageIndicatorTintColor = UIColor.blue.withAlphaComponent(0.5)
+        pageControl.currentPageIndicatorTintColor = .blue
+        return pageControl
     }()
 
     // MARK: - Initializing
@@ -48,6 +52,7 @@ final class GalleryView: UIView {
     private func displaySubviews() {
         addSubview(paggingScrollView)
         addSubview(exitButton)
+        addSubview(imagesPageControl)
 
         NSLayoutConstraint.activate([
             paggingScrollView.topAnchor.constraint(equalTo: topAnchor),
@@ -55,7 +60,9 @@ final class GalleryView: UIView {
             paggingScrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
             paggingScrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
             exitButton.topAnchor.constraint(equalTo: topAnchor, constant: 20),
-            exitButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -40)
+            exitButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -40),
+            imagesPageControl.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            imagesPageControl.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
     }
 
@@ -72,13 +79,22 @@ final class GalleryView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        exitButton.titleEdgeInsets = UIEdgeInsets(top: 5, left: 15, bottom: 5, right: 15)
         exitButton.frame = CGRect(
             origin: exitButton.frame.origin,
             size: CGSize(
-                width: exitButton.frame.size.width + 20,
+                width: exitButton.frame.size.width + 30,
                 height: exitButton.frame.size.height
             )
         )
+        exitButton.layer.cornerRadius = exitButton.frame.height / 2
+        displayShadow(at: exitButton)
+    }
+
+    private func displayShadow(at view: UIView) {
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowRadius = 25
+        view.layer.shadowOpacity = 0.8
     }
 
     // MARK: - Displaying Images
@@ -91,6 +107,7 @@ final class GalleryView: UIView {
             return view
         }
 
+        imagesPageControl.numberOfPages = imageViews.count
         insertIntoScrollView(imageViews: imageViews)
     }
 
@@ -108,5 +125,14 @@ final class GalleryView: UIView {
                 height: frame.height
             )
         }
+    }
+}
+
+// MARK: - UIScrollViewDelegate
+
+extension GalleryView: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let currentPage = Int(scrollView.contentOffset.x / frame.width)
+        imagesPageControl.currentPage = currentPage
     }
 }
