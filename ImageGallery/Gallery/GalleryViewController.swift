@@ -19,23 +19,23 @@ final class GalleryViewController: UIViewController {
     private let imagesURLs: [String]
     private let downloader: ImageDownloader
 
-    // MARK: - Initializing
-
     private var actualURLs: [URL] {
         imagesURLs.compactMap { urlPath in
             URL(string: urlPath)
         }
     }
 
-    init(imagesURLs: [String], downloader: ImageDownloader = DefaultImageDownloader()) {
-        self.imagesURLs = imagesURLs
-        self.downloader = downloader
-        super.init(nibName: nil, bundle: nil)
-    }
+    // MARK: - Initializing
 
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    init(imagesURLs: [String], downloader: ImageDownloader = DefaultImageDownloader()) {
+        self.imagesURLs = imagesURLs
+        self.downloader = downloader
+        super.init(nibName: nil, bundle: nil)
     }
 
     // MARK: - Lifecycle
