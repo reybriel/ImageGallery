@@ -48,6 +48,7 @@ final class GalleryViewController: UIViewController {
             guard let self = self, error == nil else { return }
             DispatchQueue.main.async {
                 self.galleryView.display(images: images)
+                self.galleryView.isImagesPageControlHidden = images.count <= 1
             }
         }
     }

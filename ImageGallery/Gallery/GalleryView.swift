@@ -7,6 +7,11 @@ protocol GalleryViewDelegate: AnyObject {
 final class GalleryView: UIView {
     weak var delegate: GalleryViewDelegate?
 
+    var isImagesPageControlHidden: Bool {
+        get { imagesPageControl.isHidden }
+        set { imagesPageControl.isHidden = newValue }
+    }
+
     private lazy var paggingScrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
