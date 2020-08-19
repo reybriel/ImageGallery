@@ -17,6 +17,7 @@ final class GalleryViewController: UIViewController {
     }()
 
     private let imagesURLs: [String]
+    private let downloader: ImageDownloader
 
     // MARK: - Initializing
 
@@ -26,8 +27,9 @@ final class GalleryViewController: UIViewController {
         }
     }
 
-    init(imagesURLs: [String]) {
+    init(imagesURLs: [String], downloader: ImageDownloader = DefaultImageDownloader()) {
         self.imagesURLs = imagesURLs
+        self.downloader = downloader
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -44,29 +46,10 @@ final class GalleryViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        downloadImages { [weak self] images, error in
+        downloader.downloadImages(fromURLs: actualURLs) { [weak self] images, error in
             guard let self = self, error == nil else { return }
-            DispatchQueue.main.async {
-                self.galleryView.display(images: images)
-                self.galleryView.isImagesPageControlHidden = images.count <= 1
-            }
-        }
-    }
-
-    private func downloadImages(completion: @escaping ([UIImage], Error?) -> Void) {
-        DispatchQueue.global().async { [actualURLs] in
-            do {
-                let images = try actualURLs.map { url in
-                    try Data(contentsOf: url)
-                }
-                .compactMap { data in
-                    UIImage(data: data)
-                }
-
-                completion(images, nil)
-            } catch {
-                completion([], error)
-            }
+            self.galleryView.display(images: images)
+            self.galleryView.isImagesPageControlHidden = images.count <= 1
         }
     }
 }
