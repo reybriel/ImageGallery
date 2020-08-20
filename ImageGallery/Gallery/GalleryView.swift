@@ -111,18 +111,31 @@ final class GalleryView: UIView {
     // MARK: - Displaying Images
 
     func display(images: [UIImage]) {
-        let imageViews = images.map { image -> UIImageView in
-            let view = UIImageView(image: image)
-            view.contentMode = .scaleAspectFit
-            return view
-        }
-
-        imagesPageControl.numberOfPages = imageViews.count
-        insertIntoScrollView(imageViews: imageViews)
+        let views = createImageViews(images: images)
+        imagesPageControl.numberOfPages = views.count
+        insertIntoScrollView(views: views)
     }
 
-    private func insertIntoScrollView(imageViews: [UIImageView]) {
-        imageViews.forEach(paggingScrollView.addSubview)
+    private func createImageViews(images: [UIImage]) -> [UIView] {
+        images.enumerated().map { offset, image -> UIView in
+            let floatingOffset = CGFloat(offset)
+            let referenceCenter = CGPoint(
+                x: center.x + floatingOffset * frame.width,
+                y: center.y
+            )
+
+            let imageView = ZoomImageView(
+                image: image,
+                referenceCenter: referenceCenter
+            )
+
+            imageView.contentMode = .scaleAspectFit
+            return imageView
+        }
+    }
+
+    private func insertIntoScrollView(views: [UIView]) {
+        views.forEach(paggingScrollView.addSubview)
         layoutImagesScrollViewSize()
     }
 

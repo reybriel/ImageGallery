@@ -13,6 +13,7 @@
 		162D84D124ED98AD00092C0F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 162D84CF24ED98AD00092C0F /* LaunchScreen.storyboard */; };
 		162D84D924ED9D0D00092C0F /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162D84D824ED9D0C00092C0F /* GalleryViewController.swift */; };
 		162D84DB24EDA6AB00092C0F /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162D84DA24EDA6AB00092C0F /* GalleryView.swift */; };
+		16469BE124EEF3C500AC52FA /* ZoomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16469BE024EEF3C500AC52FA /* ZoomImageView.swift */; };
 		1686624A24EDC962000EB2FA /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1686624924EDC962000EB2FA /* ImageDownloader.swift */; };
 /* End PBXBuildFile section */
 
@@ -25,6 +26,7 @@
 		162D84D224ED98AD00092C0F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		162D84D824ED9D0C00092C0F /* GalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
 		162D84DA24EDA6AB00092C0F /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
+		16469BE024EEF3C500AC52FA /* ZoomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomImageView.swift; sourceTree = "<group>"; };
 		1686624924EDC962000EB2FA /* ImageDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -60,6 +62,7 @@
 			children = (
 				162D84C424ED98AA00092C0F /* AppDelegate.swift */,
 				162D84C824ED98AA00092C0F /* ViewController.swift */,
+				16469BE024EEF3C500AC52FA /* ZoomImageView.swift */,
 				1686624824EDC954000EB2FA /* Utils */,
 				16FFAC3624EDB6780010543E /* Gallery */,
 				162D84CD24ED98AD00092C0F /* Assets.xcassets */,
@@ -156,6 +159,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				162D84D924ED9D0D00092C0F /* GalleryViewController.swift in Sources */,
+				16469BE124EEF3C500AC52FA /* ZoomImageView.swift in Sources */,
 				1686624A24EDC962000EB2FA /* ImageDownloader.swift in Sources */,
 				162D84C924ED98AA00092C0F /* ViewController.swift in Sources */,
 				162D84C524ED98AA00092C0F /* AppDelegate.swift in Sources */,
