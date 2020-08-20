@@ -86,6 +86,12 @@ final class GalleryView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        layoutExitButton()
+        displayShadow(at: exitButton)
+    }
+
+    private func layoutExitButton() {
+        exitButton.layer.cornerRadius = exitButton.frame.height / 2
         exitButton.titleEdgeInsets = UIEdgeInsets(top: 5, left: 15, bottom: 5, right: 15)
         exitButton.frame = CGRect(
             origin: exitButton.frame.origin,
@@ -94,8 +100,6 @@ final class GalleryView: UIView {
                 height: exitButton.frame.size.height
             )
         )
-        exitButton.layer.cornerRadius = exitButton.frame.height / 2
-        displayShadow(at: exitButton)
     }
 
     private func displayShadow(at view: UIView) {
