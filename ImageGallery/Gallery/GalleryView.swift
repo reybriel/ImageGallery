@@ -40,6 +40,8 @@ final class GalleryView: UIView {
         return pageControl
     }()
 
+    private var previousPage: Int = 0
+
     // MARK: - Initializing
 
     @available(*, unavailable)
@@ -116,26 +118,44 @@ final class GalleryView: UIView {
     }
 
     private func insertIntoScrollView(imageViews: [UIImageView]) {
-        paggingScrollView.contentSize = imageViews.reduce(CGSize.zero) { contentSize, imageView in
-            imageView.frame = CGRect(
+        imageViews.forEach(paggingScrollView.addSubview)
+        layoutImagesScrollViewSize()
+    }
+
+    private func layoutImagesScrollViewSize() {
+        let subviews = paggingScrollView.subviews
+
+        paggingScrollView.contentSize = subviews.reduce(CGSize.zero) { contentSize, subview in
+            subview.frame = CGRect(
                 origin: CGPoint(x: contentSize.width, y: 0),
                 size: frame.size
             )
 
-            paggingScrollView.addSubview(imageView)
-
             return CGSize(
-                width: contentSize.width + imageView.frame.width,
+                width: contentSize.width + frame.width,
                 height: frame.height
             )
         }
+
+        paggingScrollView.contentOffset.x = frame.width * CGFloat(previousPage)
+    }
+
+    // MARK: - Rotating
+
+    func rotateToPortrait() {
+        layoutImagesScrollViewSize()
+    }
+
+    func rotateToLandscape() {
+        layoutImagesScrollViewSize()
     }
 }
 
-// MARK: - UIScrollViewDelegate
+// MARK: - UIScrollViewDelegate -
 
 extension GalleryView: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        previousPage = imagesPageControl.currentPage
         imagesPageControl.currentPage = calculateCurrentPage(
             contentOffsetX: scrollView.contentOffset.x
         )

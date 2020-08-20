@@ -52,9 +52,20 @@ final class GalleryViewController: UIViewController {
             self.galleryView.isImagesPageControlHidden = images.count <= 1
         }
     }
+
+    override func willAnimateRotation(to orientation: UIInterfaceOrientation, duration _: TimeInterval) {
+        switch orientation {
+        case .portrait:
+            galleryView.rotateToPortrait()
+        case .landscapeLeft, .landscapeRight:
+            galleryView.rotateToLandscape()
+        default:
+            break
+        }
+    }
 }
 
-// MARK: - GalleryViewDelegate
+// MARK: - GalleryViewDelegate -
 
 extension GalleryViewController: GalleryViewDelegate {
     func didTapExitButton() {
