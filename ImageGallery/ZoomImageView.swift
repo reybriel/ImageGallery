@@ -7,6 +7,7 @@ final class ZoomImageView: UIImageView {
     }
 
     private let referenceCenter: CGPoint
+    private var isZooming: Bool = false
 
     // MARK: - Initializing
 
@@ -49,6 +50,7 @@ final class ZoomImageView: UIImageView {
     }
 
     private func applyZoomIfNeeded(scale: CGFloat) {
+        isZooming = true
         if scale >= 1 {
             let zoomScale = 1.0 + scale / 2
             transform = CGAffineTransform(scaleX: zoomScale, y: zoomScale)
@@ -56,16 +58,21 @@ final class ZoomImageView: UIImageView {
     }
 
     private func restoreOriginalScale() {
-        UIViewPropertyAnimator(duration: 0.25, curve: .easeInOut) {
+        let animator = UIViewPropertyAnimator(duration: 0.25, curve: .easeInOut) {
             self.transform = .identity
         }
-        .startAnimation()
+        animator.addCompletion { _ in
+            self.isZooming = false
+        }
+        animator.startAnimation()
     }
 
     // MARK: - Sliding
 
     @objc
     private func updatePosition(_ panRecognizer: UIPanGestureRecognizer) {
+        guard isZooming else { return }
+
         switch panRecognizer.state {
         case .began, .changed:
             applyTranslation(panRecognizer)
