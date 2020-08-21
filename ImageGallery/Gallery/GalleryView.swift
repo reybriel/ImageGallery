@@ -49,6 +49,11 @@ final class GalleryView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    convenience init(showingIndex: Int) {
+        self.init(frame: .zero)
+        previousPage = showingIndex
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .black

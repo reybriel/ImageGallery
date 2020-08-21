@@ -10,12 +10,7 @@ final class GalleryViewController: UIViewController {
         true
     }
 
-    private lazy var galleryView: GalleryView = {
-        let view = GalleryView()
-        view.delegate = self
-        return view
-    }()
-
+    private let galleryView: GalleryView
     private let imagesURLs: [String]
     private let downloader: ImageDownloader
 
@@ -32,10 +27,22 @@ final class GalleryViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(imagesURLs: [String], downloader: ImageDownloader = DefaultImageDownloader()) {
+    init(
+        imagesURLs: [String],
+        showingIndex: Int = 0,
+        downloader: ImageDownloader = DefaultImageDownloader()
+    ) {
         self.imagesURLs = imagesURLs
         self.downloader = downloader
+
+        if showingIndex < imagesURLs.count {
+            galleryView = GalleryView(showingIndex: showingIndex)
+        } else {
+            galleryView = GalleryView()
+        }
+
         super.init(nibName: nil, bundle: nil)
+        galleryView.delegate = self
     }
 
     // MARK: - Lifecycle
