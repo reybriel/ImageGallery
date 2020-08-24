@@ -36,7 +36,7 @@ final class ViewController: UIViewController {
                 "https://images-na.ssl-images-amazon.com/images/I/81qqrdewZlL._AC_SY450_.jpg",
                 "https://www.hillspet.com.br/content/dam/cp-sites/hills/hills-pet/pt_br/general/prescription-diet/brands/hills-site-banner-ration-pack.jpg"
             ],
-            showingIndex: 1
+            showingPage: 1
         )
 
         present(viewController, animated: true)

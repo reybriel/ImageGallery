@@ -10,8 +10,14 @@ final class GalleryViewController: UIViewController {
         true
     }
 
-    private let galleryView: GalleryView
+    private lazy var galleryView: GalleryView = {
+        let view = GalleryView()
+        view.delegate = self
+        return view
+    }()
+
     private let imagesURLs: [String]
+    private let showingPage: Int
     private let downloader: ImageDownloader
 
     private var actualURLs: [URL] {
@@ -29,20 +35,13 @@ final class GalleryViewController: UIViewController {
 
     init(
         imagesURLs: [String],
-        showingIndex: Int = 0,
+        showingPage: Int = 0,
         downloader: ImageDownloader = DefaultImageDownloader()
     ) {
         self.imagesURLs = imagesURLs
+        self.showingPage = showingPage
         self.downloader = downloader
-
-        if showingIndex < imagesURLs.count {
-            galleryView = GalleryView(showingIndex: showingIndex)
-        } else {
-            galleryView = GalleryView()
-        }
-
         super.init(nibName: nil, bundle: nil)
-        galleryView.delegate = self
     }
 
     // MARK: - Lifecycle
@@ -53,22 +52,22 @@ final class GalleryViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        downloader.downloadImages(fromURLs: actualURLs) { [weak self] images, error in
+        downloader.downloadImages(fromURLs: actualURLs) { [weak self, showingPage] images, error in
             guard let self = self, error == nil else { return }
-            self.galleryView.display(images: images)
+            self.galleryView.display(images: images, showingPage: showingPage)
             self.galleryView.isImagesPageControlHidden = images.count <= 1
         }
     }
 
-    override func willAnimateRotation(to orientation: UIInterfaceOrientation, duration _: TimeInterval) {
-        switch orientation {
-        case .portrait:
-            galleryView.rotateToPortrait()
-        case .landscapeLeft, .landscapeRight:
-            galleryView.rotateToLandscape()
-        default:
-            break
-        }
+    override func viewWillTransition(to size: CGSize, with transitionCoordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: transitionCoordinator)
+        galleryView.prepareForRotation()
+
+        transitionCoordinator.animate(
+            alongsideTransition: { _ in
+                self.galleryView.performRotation(sizeAfterRotation: size)
+            }
+        )
     }
 }
 

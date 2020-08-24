@@ -40,18 +40,13 @@ final class GalleryView: UIView {
         return pageControl
     }()
 
-    private var previousPage: Int = 0
+    private var showingPageAfterRotation = 0
 
     // MARK: - Initializing
 
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    convenience init(showingIndex: Int) {
-        self.init(frame: .zero)
-        previousPage = showingIndex
     }
 
     override init(frame: CGRect) {
@@ -115,10 +110,10 @@ final class GalleryView: UIView {
 
     // MARK: - Displaying Images
 
-    func display(images: [UIImage]) {
+    func display(images: [UIImage], showingPage page: Int) {
         let views = createImageViews(images: images)
         imagesPageControl.numberOfPages = views.count
-        insertIntoScrollView(views: views)
+        insertIntoScrollView(views: views, showingPage: page)
     }
 
     private func createImageViews(images: [UIImage]) -> [UIView] {
@@ -139,37 +134,40 @@ final class GalleryView: UIView {
         }
     }
 
-    private func insertIntoScrollView(views: [UIView]) {
+    private func insertIntoScrollView(views: [UIView], showingPage page: Int) {
         views.forEach(paggingScrollView.addSubview)
-        layoutImagesScrollViewSize()
+        resizeImagesScrollView(andMoveToPage: page, baseSize: frame.size)
     }
 
-    private func layoutImagesScrollViewSize() {
+    private func resizeImagesScrollView(andMoveToPage page: Int, baseSize: CGSize) {
         let subviews = paggingScrollView.subviews
 
         paggingScrollView.contentSize = subviews.reduce(CGSize.zero) { contentSize, subview in
             subview.frame = CGRect(
                 origin: CGPoint(x: contentSize.width, y: 0),
-                size: frame.size
+                size: baseSize
             )
 
             return CGSize(
-                width: contentSize.width + frame.width,
-                height: frame.height
+                width: contentSize.width + baseSize.width,
+                height: baseSize.height
             )
         }
 
-        paggingScrollView.contentOffset.x = frame.width * CGFloat(previousPage)
+        paggingScrollView.contentOffset.x = baseSize.width * CGFloat(page)
     }
 
     // MARK: - Rotating
 
-    func rotateToPortrait() {
-        layoutImagesScrollViewSize()
+    func prepareForRotation() {
+        showingPageAfterRotation = imagesPageControl.currentPage
     }
 
-    func rotateToLandscape() {
-        layoutImagesScrollViewSize()
+    func performRotation(sizeAfterRotation: CGSize) {
+        resizeImagesScrollView(
+            andMoveToPage: showingPageAfterRotation,
+            baseSize: sizeAfterRotation
+        )
     }
 }
 
@@ -177,7 +175,6 @@ final class GalleryView: UIView {
 
 extension GalleryView: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        previousPage = imagesPageControl.currentPage
         imagesPageControl.currentPage = calculateCurrentPage(
             contentOffsetX: scrollView.contentOffset.x
         )
