@@ -2,7 +2,7 @@ import Foundation
 import class UIKit.UIImage
 
 typealias ImageDownloadCallbackFunction = ([UIImage], Error?) -> Void
-typealias ImageDownloadFunction = () throws -> [UIImage]
+private typealias ImageDownloadFunction = () throws -> [UIImage]
 
 protocol ImageDownloader {
     func downloadImages(fromURLs: [URL], completion: @escaping ImageDownloadCallbackFunction)
